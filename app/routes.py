@@ -24,7 +24,11 @@ def set_data():
 
     data_store[key] = value
 
-    return jsonify(message="Data stored successfully", key=key, value=value), 201
+    return jsonify(
+        message="Data stored successfully", 
+        key=key, 
+        value=value
+        ), 201
 
 
 # 3. GET API (Read)
@@ -33,4 +37,7 @@ def get_data(key):
     if key not in data_store:
         return jsonify(error="Key not found"), 404
 
-    return jsonify(key=key, value=data_store[key]), 200
+    return jsonify(
+        key=key, 
+        value=data_store[key]
+        ), 200
