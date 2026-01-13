@@ -2,7 +2,10 @@ name: CI-CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - dev
+      - main
+      - prod
   pull_request:
 
 jobs:
@@ -10,28 +13,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        pip install pytest flake8
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest flake8
 
-    - name: Lint
-      run: flake8 app
+      - name: Lint
+        run: flake8 app
 
-    - name: Run tests
-      run: pytest
+      - name: Run tests
+        run: pytest
 
   docker-build:
+    if: github.event_name == 'push'
     needs: build-test
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
 
     steps:
       - name: Checkout code
